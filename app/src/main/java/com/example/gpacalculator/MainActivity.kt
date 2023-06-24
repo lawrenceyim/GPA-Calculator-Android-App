@@ -52,6 +52,10 @@ class MainActivity : AppCompatActivity() {
             arrayListCourses?.add(inflatedLayout)
             scrollViewContainer?.addView(inflatedLayout)
         }
+        inflatedLayout?.findViewById<Button>(R.id.buttonRemoveCourse)?.setOnClickListener {
+            removeCourse(inflatedLayout)
+            Toast.makeText(this, "Course removed", Toast.LENGTH_SHORT).show()
+        }
     }
 
     private fun calculateGPA() {
@@ -88,5 +92,11 @@ class MainActivity : AppCompatActivity() {
             return
         }
         textViewGPA?.text = "%.2f".format(gpa / totalCreditHours).toString()
+    }
+
+    private fun removeCourse(specificView : View) {
+        arrayListCourses?.remove(specificView)
+        scrollViewContainer?.removeView(specificView)
+        println(arrayListCourses?.size)
     }
 }
