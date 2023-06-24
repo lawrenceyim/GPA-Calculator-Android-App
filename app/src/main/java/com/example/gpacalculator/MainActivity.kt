@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.Spinner
 import android.widget.TextView
+import android.widget.Toast
 import kotlin.math.truncate
 
 class MainActivity : AppCompatActivity() {
@@ -40,38 +41,52 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonCalculateGPA?.setOnClickListener {
-            var gpa: Float = 0.0F
-            var totalCreditHours = 0
-            arrayListCourses?.let { list ->
-                for (i in list.indices) {
-                    val specificView : View? = scrollViewContainer?.getChildAt(i)
-                    val spinner: Spinner? = specificView?.findViewById<Spinner>(R.id.spinnerSelectGrade) as Spinner
-                    val creditHours: EditText? = specificView?.findViewById<EditText>(R.id.editTextCreditHours) as EditText
-                    var selectedGrade = spinner?.selectedItem
-                    totalCreditHours += creditHours?.text.toString().toInt()
-                    when (selectedGrade) {
-                        "A" -> gpa += 4 * creditHours?.text.toString().toInt()
-                        "B" -> gpa += 3 * creditHours?.text.toString().toInt()
-                        "C" -> gpa += 2 * creditHours?.text.toString().toInt()
-                        "D" -> gpa += creditHours?.text.toString().toInt()
-                        "F" -> gpa += 0
-                        "W" -> gpa += 0
-                        else -> gpa += 0
-                    }
-
-                }
-
-            }
-            textViewGPA?.text = "%.2f".format(gpa / totalCreditHours).toString()
+            calculateGPA()
         }
 
     }
 
     private fun addCourse() {
-        var inflatedLayout : View? = inflater?.inflate(R.layout.course_view, null)
+        val inflatedLayout : View? = inflater?.inflate(R.layout.course_view, null)
         inflatedLayout?.let{
             arrayListCourses?.add(inflatedLayout)
             scrollViewContainer?.addView(inflatedLayout)
         }
+    }
+
+    private fun calculateGPA() {
+        var gpa: Float = 0.0F
+        var totalCreditHours = 0
+        var missingInput = false
+        arrayListCourses?.let { list ->
+            for (i in list.indices) {
+                val specificView : View? = scrollViewContainer?.getChildAt(i)
+                val selectedGrade = specificView?.findViewById<Spinner>(R.id.spinnerSelectGrade)?.selectedItem
+                if (specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.text?.toString() == "") {
+                    missingInput = true
+                    continue
+                }
+
+                val creditHours: Int = specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.text.toString().toInt()
+
+
+                totalCreditHours += creditHours
+                gpa += when (selectedGrade) {
+                    "A" -> 4 * creditHours
+                    "B" -> 3 * creditHours
+                    "C" -> 2 * creditHours
+                    "D" -> creditHours
+                    "F" -> 0
+                    "W" -> 0
+                    else -> 0
+                }
+            }
+        }
+        if (missingInput) {
+            Toast.makeText(this, "Missing input for credit hours", Toast.LENGTH_SHORT).show()
+            textViewGPA?.text = "NaN"
+            return
+        }
+        textViewGPA?.text = "%.2f".format(gpa / totalCreditHours).toString()
     }
 }
