@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- First input field -->
+    <EditText
+        android:id="@+id/editTextCourseName"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_weight="2"
+        android:textSize="12dp"
+        android:hint="Course"/>
+
+    <EditText
+        android:id="@+id/editTextCreditHours"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:inputType="number"
+        android:textSize="12dp"
+        android:hint="Credit"/>
+
+    <Spinner
+        android:id="@+id/spinnerSelectGrade"
+        android:layout_width="20dp"
+        android:layout_height="50dp"
+        android:layout_weight="1"
+        android:entries="@array/letter_grades"
+        />
+
+    <Button
+        android:id="@+id/buttonRemoveCourse"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:textSize="12dp"
+        android:text="Remove Course"/>
+</LinearLayout>
+
