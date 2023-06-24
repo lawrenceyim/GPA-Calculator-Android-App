@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
+import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.ScrollView
+import android.widget.Spinner
 import android.widget.TextView
+import kotlin.math.truncate
 
 class MainActivity : AppCompatActivity() {
     private var arrayListCourses : ArrayList<View>? = null
@@ -37,7 +40,29 @@ class MainActivity : AppCompatActivity() {
         }
 
         buttonCalculateGPA?.setOnClickListener {
+            var gpa: Float = 0.0F
+            var totalCreditHours = 0
+            arrayListCourses?.let { list ->
+                for (i in list.indices) {
+                    val specificView : View? = scrollViewContainer?.getChildAt(i)
+                    val spinner: Spinner? = specificView?.findViewById<Spinner>(R.id.spinnerSelectGrade) as Spinner
+                    val creditHours: EditText? = specificView?.findViewById<EditText>(R.id.editTextCreditHours) as EditText
+                    var selectedGrade = spinner?.selectedItem
+                    totalCreditHours += creditHours?.text.toString().toInt()
+                    when (selectedGrade) {
+                        "A" -> gpa += 4 * creditHours?.text.toString().toInt()
+                        "B" -> gpa += 3 * creditHours?.text.toString().toInt()
+                        "C" -> gpa += 2 * creditHours?.text.toString().toInt()
+                        "D" -> gpa += creditHours?.text.toString().toInt()
+                        "F" -> gpa += 0
+                        "W" -> gpa += 0
+                        else -> gpa += 0
+                    }
 
+                }
+
+            }
+            textViewGPA?.text = "%.2f".format(gpa / totalCreditHours).toString()
         }
 
     }
