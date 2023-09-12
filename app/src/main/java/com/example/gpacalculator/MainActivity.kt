@@ -66,13 +66,14 @@ class MainActivity : AppCompatActivity() {
             for (i in list.indices) {
                 val specificView : View? = scrollViewContainer?.getChildAt(i)
                 val selectedGrade = specificView?.findViewById<Spinner>(R.id.spinnerSelectGrade)?.selectedItem
+                specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.setError(null)
                 if (specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.text?.toString() == "") {
                     missingInput = true
+                    specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.setError("Missing input")
                     continue
                 }
 
                 val creditHours: Int = specificView?.findViewById<EditText>(R.id.editTextCreditHours)?.text.toString().toInt()
-
 
                 totalCreditHours += creditHours
                 gpa += when (selectedGrade) {
